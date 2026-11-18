@@ -185,21 +185,6 @@ ctp_error_t ctp_get_product_id(const ctp_device_t *const ctp,
   return CTP_ERROR_NONE;
 }
 
-static ctp_error_t test_comms(const ctp_device_t *const ctp) {
-  // Simple test to verify i2c communication. Will check if the product id
-  // `seems` valid
-  uint32_t product_id = 0;
-  ctp_error_t err = ctp_get_product_id(ctp, &product_id);
-  if (err != CTP_ERROR_NONE) {
-    return err;
-  }
-  // Most communication errors will usually return as all binary 1s or 0s
-  if (product_id == 0 || product_id == 0xFFFF) {
-    return CTP_ERROR_COMM_TEST_FAIL;
-  }
-  return CTP_ERROR_NONE;
-}
-
 static void parse_data_into_touch(ctp_touch_t *const touch,
                                   const uint_least8_t *const data) {
   touch->track_id = data[CTP_TOUCH_DATA_TRACK_ID_OFFSET];
@@ -314,6 +299,23 @@ static void copy_touch(ctp_touch_t *const dest, const ctp_touch_t *const src) {
   dest->x = src->x;
   dest->y = src->y;
   dest->size = src->size;
+}
+
+static ctp_error_t verify_config_data_chunk(const ctp_device_t *const ctp) {
+  if (CTP_CONFIG_RAW_CHECK_BYTE_COUNT > ctp->config_array_length) {
+    return CTP_ERROR_DEFS_INVALID;
+  }
+  uint_least8_t config_read_data[CTP_CONFIG_RAW_CHECK_BYTE_COUNT] = {0};
+  ctp_error_t err = i2c_read_reg(ctp, CTP_REG_CONFIG_DATA, config_read_data, CTP_CONFIG_RAW_CHECK_BYTE_COUNT);
+  if (err != CTP_ERROR_NONE) {
+    return err;
+  }
+  for(uint_least8_t i = 0; i < CTP_CONFIG_RAW_CHECK_BYTE_COUNT; i++) {
+    if(config_read_data[i] != ctp->config_array[i]) {
+      return CTP_ERROR_CONFIG_RAW_CHECK_FAIL;
+    }
+  }
+  return CTP_ERROR_NONE;
 }
 
 static ctp_error_t ctp_send_config(const ctp_device_t *const ctp) {
@@ -665,22 +667,18 @@ ctp_error_t ctp_initialize(ctp_device_t *const ctp,
     return err;
   }
 
-  // test_comms used ctp_get_proudct_id which requires is_initilized = true
-  // so we must set it here. If a failure occrs later, remember to clear it
-  ctp->is_initialized = true;
-  err = test_comms(ctp);
+  err = ctp_send_config(ctp);
   if (err != CTP_ERROR_NONE) {
-    ctp->is_initialized = false;
     return err;
   }
 
-  err = ctp_send_config(ctp);
+  err = verify_config_data_chunk(ctp);
   if (err != CTP_ERROR_NONE) {
-    ctp->is_initialized = false;
     return err;
   }
 
   ctp_clear_touch_event_list(&ctp->touch_list);
+  ctp->is_initialized = true;
   ctp->attention = false;
   return CTP_ERROR_NONE;
 }
