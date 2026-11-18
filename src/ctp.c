@@ -192,7 +192,7 @@ static ctp_error_t test_comms(const ctp_device_t *const ctp) {
   ctp_error_t err = ctp_get_product_id(ctp, &product_id);
   // Most communication errors will usually return as all binary 1s or 0s
   if (product_id == 0 || product_id == 0xFFFF) {
-    return CTP_ERROR_I2C;
+    return CTP_ERROR_COMM_TEST_FAIL;
   }
   return err;
 }

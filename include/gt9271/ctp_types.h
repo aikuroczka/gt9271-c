@@ -15,6 +15,7 @@ typedef enum ctp_error_t {
   CTP_ERROR_ATTEMPT_READ_WRITE_ONLY_REG,
   CTP_ERROR_CONFIG_NOT_SENT,
   CTP_ERROR_CONFIG_INVALID,
+  CTP_ERROR_COMM_TEST_FAIL,
   CTP_ERROR_INDEX_OOB_ATTEMPT, ///< user provided function input that would have
                                ///< exceded the bounds of an array
   CTP_ERROR_I2C,
