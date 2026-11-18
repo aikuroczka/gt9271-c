@@ -21,5 +21,5 @@ const uint_least8_t g_ctp_default_config[] = {
     0x27, 0x28, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x4E, 0x01};
 
-const uint16_t g_ctp_default_config_len =
-    (uint16_t)(sizeof(g_ctp_default_config));
+const uint_least8_t g_ctp_default_config_len =
+    (uint_least8_t)(sizeof(g_ctp_default_config));
