@@ -190,11 +190,14 @@ static ctp_error_t test_comms(const ctp_device_t *const ctp) {
   // `seems` valid
   uint32_t product_id = 0;
   ctp_error_t err = ctp_get_product_id(ctp, &product_id);
+  if (err != CTP_ERROR_NONE) {
+    return err;
+  }
   // Most communication errors will usually return as all binary 1s or 0s
   if (product_id == 0 || product_id == 0xFFFF) {
     return CTP_ERROR_COMM_TEST_FAIL;
   }
-  return err;
+  return CTP_ERROR_NONE;
 }
 
 static void parse_data_into_touch(ctp_touch_t *const touch,
