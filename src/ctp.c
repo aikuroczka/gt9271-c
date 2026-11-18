@@ -665,18 +665,22 @@ ctp_error_t ctp_initialize(ctp_device_t *const ctp,
     return err;
   }
 
+  // test_comms used ctp_get_proudct_id which requires is_initilized = true
+  // so we must set it here. If a failure occrs later, remember to clear it
+  ctp->is_initialized = true;
   err = test_comms(ctp);
   if (err != CTP_ERROR_NONE) {
+    ctp->is_initialized = false;
     return err;
   }
 
   err = ctp_send_config(ctp);
   if (err != CTP_ERROR_NONE) {
+    ctp->is_initialized = false;
     return err;
   }
 
   ctp_clear_touch_event_list(&ctp->touch_list);
-  ctp->is_initialized = true;
   ctp->attention = false;
   return CTP_ERROR_NONE;
 }
