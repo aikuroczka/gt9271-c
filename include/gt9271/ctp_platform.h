@@ -76,8 +76,6 @@ typedef struct ctp_platform_interface_t {
   ctp_gpio_write_t gpio_write;
   ctp_gpio_read_t gpio_read;
   ctp_delay_msec_t delay_msec;
-  uint16_t pin_scl;
-  uint16_t pin_sda;
   uint16_t pin_reset;
   uint16_t pin_int;
   uint16_t pin_wake;
