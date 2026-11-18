@@ -78,7 +78,6 @@ typedef struct ctp_platform_interface_t {
   ctp_delay_msec_t delay_msec;
   uint16_t pin_reset;
   uint16_t pin_int;
-  uint16_t pin_wake;
 } ctp_platform_interface_t;
 
 /**
