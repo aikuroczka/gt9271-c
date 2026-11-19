@@ -1,12 +1,25 @@
+/**
+ * @file ctp_default_config.h
+ * @brief Manufacturer-provided configuration for GT9271 panels.
+ */
+
 #ifndef CTP_DEFAULT_CONFIG_H
 #define CTP_DEFAULT_CONFIG_H
 
 #include <stdint.h>
 
-/** @brief Default manufacturer configuration array stored in Flash.
- * @details The configuration array is typically provided by the manufacturer for a specific LCD.
- * This default config is for an 800x480 array with a slight increase in noise resistance.
- * By referencing the datasheet, it is possible to adjust the array to suite your needs if the manufacurer's is insufficient.
+/**
+ * @brief Default manufacturer configuration that must be written to GT9271 on boot
+ *
+ * @details This array contains the calibrated parameters for a specific LCD panel
+ * (800x480). These values include sensitivity thresholds, noise filters, and
+ * coordinate scaling factors.
+ *
+ * @warning Modifying this array without referring to the GT9271 register map
+ * may result in reduced touch accuracy, increased ghost touches, or complete
+ * device failure. Many of the valaues are reserved such that adjustments would
+ * have unknown consequences. If adjusting for a different panel, ensure the
+ * checksum at the end of the block is updated accordingly.
  */
 extern const uint_least8_t g_ctp_default_config[];
 
