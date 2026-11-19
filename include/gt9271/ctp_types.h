@@ -2,6 +2,7 @@
 #define CTP_TYPES_H
 
 #include <gt9271/ctp_defs.h>
+#include <gt9271/ctp_platform.h>
 #include <stdbool.h>
 #include <stdint.h>
 

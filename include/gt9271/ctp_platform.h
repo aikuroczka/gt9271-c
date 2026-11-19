@@ -6,7 +6,6 @@
 #ifndef CTP_PLATFORM_H
 #define CTP_PLATFORM_H
 
-#include <gt9271/ctp_types.h>
 #include <stdbool.h>
 #include <stdint.h>
 
