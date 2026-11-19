@@ -25,7 +25,6 @@
 #define CTP_MIN_TOUCH_SIZE 5
 #define CTP_MAX_TOUCH_SIZE 100
 
-/* I2C addresses */
-#define CTP_CONFIG_RAW_CHECK_BYTE_COUNT 8 ///< Number of bytes to use to perform config RAW check
+#define CTP_TOUCH_MOVEMENT_THRESHOLD (5U)
 
 #endif // CTP_DEFS_H

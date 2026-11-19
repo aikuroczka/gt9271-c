@@ -3,6 +3,7 @@
  */
 
 #include "include/ctp_registers.h"
+#include "include/ctp_touch.h"
 #include <gt9271/ctp.h>
 #include <stddef.h>
 
@@ -257,72 +258,9 @@ static ctp_error_t set_i2c_address(ctp_device_t *const ctp,
 
   return CTP_ERROR_NONE;
 }
-
-static bool is_touch_valid(const ctp_touch_t *const touch) {
-  if (touch == NULL) {
-    return false;
-  }
-
-  // ids range from 1 to CTP_MAX_TOUCH_POINTS
-  if ((touch->track_id == 0) || (touch->track_id > CTP_MAX_TOUCH_POINTS)) {
-    return false;
-  }
-
-  if ((touch->size < CTP_MIN_TOUCH_SIZE) ||
-      (touch->size > CTP_MAX_TOUCH_SIZE)) {
-    return false;
-  }
-
-  if ((touch->x > CTP_MAX_X) || (touch->y > CTP_MAX_Y)) {
-    return false;
-  }
-
-  // 0 reads are a common error due to noise induced `ghost touches`
-  // It is very unlikely to be able to actually touch the single top left pixel
-  // so we can simply reject these touches
-  if ((touch->x == 0) && (touch->y == 0)) {
-    return false;
-  }
-
-  return true;
-}
-
-static bool are_touches_equal(const ctp_touch_t *const a,
-                              const ctp_touch_t *const b) {
-  if (a->track_id != b->track_id) {
-    return false;
-  }
-
-  if (a->x != b->x) {
-    return false;
-  }
-
-  if (a->y != b->y) {
-    return false;
-  }
-
-  if (a->size != b->size) {
-    return false;
-  }
-
-  return true;
-}
-
-static void copy_touch(ctp_touch_t *const dest, const ctp_touch_t *const src) {
-  dest->track_id = src->track_id;
-  dest->x = src->x;
-  dest->y = src->y;
-  dest->size = src->size;
-}
-
-static ctp_error_t verify_config_data_chunk(const ctp_device_t *const ctp) {
-  if (CTP_CONFIG_RAW_CHECK_BYTE_COUNT > ctp->config_array_length) {
-    return CTP_ERROR_DEFS_INVALID;
-  }
-  uint_least8_t config_read_data[CTP_CONFIG_RAW_CHECK_BYTE_COUNT] = {0};
-  ctp_error_t err = i2c_read_reg(ctp, CTP_REG_CONFIG_DATA, config_read_data, CTP_CONFIG_RAW_CHECK_BYTE_COUNT);
-  if (err != CTP_ERROR_NONE) {
-    return err;
+  if (touch_point_count > CTP_MAX_TOUCH_POINTS)
+  {
+    return CTP_ERROR_EXCEED_MAX_TOUCH_COUNT;
   }
   for(uint_least8_t i = 0; i < CTP_CONFIG_RAW_CHECK_BYTE_COUNT; i++) {
     if(config_read_data[i] != ctp->config_array[i]) {
