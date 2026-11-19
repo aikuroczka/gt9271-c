@@ -21,14 +21,18 @@
 #define CTP_SLEEP_ENTER_PULSE_MS 2U
 #define CTP_SLEEP_TO_WAKE_MIN_MS 58U
 
-static inline ctp_error_t validate_context(const ctp_device_t *const ctp) {
-  if (ctp == NULL) {
+static inline ctp_error_t validate_context(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
     return CTP_ERROR_HANDLER_IS_NULL;
   }
-  if (ctp->plat == NULL) {
+  if (ctp->config->plat == NULL)
+  {
     return CTP_ERROR_PLAT_IS_NULL;
   }
-  if (ctp->is_initialized == false) {
+  if (ctp->is_initialized == false)
+  {
     return CTP_ERROR_NOT_INITIALIZED;
   }
   return CTP_ERROR_NONE;
@@ -124,61 +128,71 @@ static ctp_error_t get_two_byte_reg_data(const ctp_device_t *const ctp,
 ctp_error_t ctp_get_firmware_version(const ctp_device_t *const ctp,
                                      uint16_t *const firmware_version) {
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
-  if (firmware_version == NULL) {
+  if (firmware_version == NULL)
+  {
     return CTP_ERROR_NULL_PTR;
   }
   return (get_two_byte_reg_data(ctp, CTP_REG_FW_VERSION, firmware_version));
 }
 
-//
 ctp_error_t ctp_get_x_cord_resolution(const ctp_device_t *const ctp,
-                                      uint16_t *const x_cord_res) {
+                                      uint16_t *const x_cord_res)
+{
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
-  if (x_cord_res == NULL) {
+  if (x_cord_res == NULL)
+  {
     return CTP_ERROR_NULL_PTR;
   }
   return (get_two_byte_reg_data(ctp, CTP_REG_X_CORD_RES, x_cord_res));
 }
 
-//
 ctp_error_t ctp_get_y_cord_resolution(const ctp_device_t *const ctp,
-                                      uint16_t *const y_cord_res) {
+                                      uint16_t *const y_cord_res)
+{
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
-  if (y_cord_res == NULL) {
+  if (y_cord_res == NULL)
+  {
     return CTP_ERROR_NULL_PTR;
   }
   return (get_two_byte_reg_data(ctp, CTP_REG_Y_CORD_RES, y_cord_res));
 }
 
-//
 ctp_error_t ctp_get_product_id(const ctp_device_t *const ctp,
-                               uint32_t *const product_id) {
+                               uint32_t *const product_id)
+{
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
-  if (product_id == NULL) {
+  if (product_id == NULL)
+  {
     return CTP_ERROR_NULL_PTR;
   }
   uint_least8_t bytes_lsb_first[CTP_REG_PRODUCT_ID_SIZE] = {0};
 
   err = i2c_read_reg(ctp, CTP_REG_PRODUCT_ID, bytes_lsb_first,
                      CTP_REG_PRODUCT_ID_SIZE);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
   *product_id = 0;
-  for (uint_least8_t i = 0; i < CTP_REG_PRODUCT_ID_SIZE; i++) {
+  for (uint_least8_t i = 0; i < CTP_REG_PRODUCT_ID_SIZE; i++)
+  {
     *product_id |= (((uint32_t)bytes_lsb_first[i]) << (i * 8));
   }
 
@@ -346,7 +360,12 @@ void ctp_set_number_of_touch_points(ctp_device_t *const ctp,
 }
 
 uint_least8_t
-ctp_get_set_number_of_touch_points(const ctp_device_t *const ctp) {
+ctp_get_set_number_of_touch_points(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
+    return 0;
+  }
   return ctp->max_touch_points;
 }
 
@@ -567,60 +586,74 @@ uint16_t ctp_get_x(const ctp_device_t *const ctp, uint_least8_t idx) {
   return ctp->touch_list.touch[idx].x;
 }
 
-uint16_t ctp_get_y(const ctp_device_t *const ctp, uint_least8_t idx) {
-  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS)) {
+uint16_t ctp_get_y(const ctp_device_t *const ctp, uint_least8_t idx)
+{
+  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS))
+  {
     return 0;
   }
   return ctp->touch_list.touch[idx].y;
 }
 
 ctp_event_t ctp_get_event(const ctp_device_t *const ctp,
-                          const uint_least8_t idx) {
-  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS)) {
+                          const uint_least8_t idx)
+{
+  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS))
+  {
     return CTP_EVENT_NONE;
   }
   return ctp->touch_list.touch[idx].event;
 }
 
-void ctp_clear_touch_event(ctp_touch_t *const touch) {
-  if (touch == NULL) {
+void ctp_clear_touch_event(ctp_touch_t *const touch)
+{
+  if (touch == NULL)
+  {
     return;
   }
 
   touch->event = CTP_EVENT_NONE;
 }
 
-bool ctp_is_touched(const ctp_device_t *const ctp) {
-  if (ctp == NULL) {
+bool ctp_is_touched(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
     return false;
   }
 
   return ctp->touch_list.count > 0;
 }
 
-uint_least8_t ctp_get_touch_count(const ctp_device_t *const ctp) {
-  if (ctp == NULL) {
+uint_least8_t ctp_get_touch_count(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
     return 0;
   }
 
   return ctp->touch_list.count;
 }
 
-uint_least8_t ctp_get_key_status(const ctp_device_t *const ctp) {
-  if (ctp == NULL) {
+uint_least8_t ctp_get_key_status(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
     return 0;
   }
 
   return ctp->touch_list.key_status;
 }
 
-ctp_error_t ctp_enter_sleep(const ctp_device_t *const ctp) {
+ctp_error_t ctp_enter_sleep(const ctp_device_t *const ctp)
+{
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
-  const ctp_platform_interface_t *const plat = ctp->plat;
+  const ctp_platform_interface_t *const plat = ctp->config->plat;
   plat->gpio_set_output(plat->pin_int);
   plat->gpio_write(plat->pin_int, false);
   plat->delay_msec(CTP_SLEEP_ENTER_PULSE_MS);
@@ -633,13 +666,15 @@ ctp_error_t ctp_enter_sleep(const ctp_device_t *const ctp) {
   return err;
 }
 
-ctp_error_t ctp_exit_sleep(const ctp_device_t *const ctp) {
+ctp_error_t ctp_exit_sleep(const ctp_device_t *const ctp)
+{
   ctp_error_t err = validate_context(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
-  const ctp_platform_interface_t *const plat = ctp->plat;
+  const ctp_platform_interface_t *const plat = ctp->config->plat;
   plat->gpio_set_output(plat->pin_int);
   plat->gpio_write(plat->pin_int, true);
   plat->delay_msec(CTP_SLEEP_WAKE_PULSE_MS);
@@ -649,36 +684,49 @@ ctp_error_t ctp_exit_sleep(const ctp_device_t *const ctp) {
   return CTP_ERROR_NONE;
 }
 
-ctp_error_t ctp_initialize(ctp_device_t *const ctp,
-                           const bool use_alt_address) {
-  if (ctp == NULL) {
+ctp_error_t ctp_initialize(ctp_device_t *const ctp, const ctp_config_t *const config)
+{
+  if (ctp == NULL)
+  {
     return CTP_ERROR_HANDLER_IS_NULL;
   }
-  if (ctp->plat == NULL) {
-    return CTP_ERROR_PLAT_IS_NULL;
-  }
-  if ((ctp->config_array == NULL) ||
-      (ctp->config_array_length != CTP_CONFIG_REQUIRED_LEN)) {
+  if ((config == NULL) ||
+      (config->config_array == NULL) ||
+      (config->config_array_length != CTP_CONFIG_REQUIRED_LEN))
+  {
     return CTP_ERROR_CONFIG_INVALID;
   }
+  if (ctp->config->plat == NULL)
+  {
+    return CTP_ERROR_PLAT_IS_NULL;
+  }
 
-  ctp_error_t err = set_i2c_address(ctp, use_alt_address);
-  if (err != CTP_ERROR_NONE) {
+  ctp->config = config;
+  ctp_error_t err = ctp_set_number_of_touch_points(ctp, config->default_max_touch_points);
+  if (err != CTP_ERROR_NONE)
+  {
+    return err;
+  }
+
+  err = set_i2c_address(ctp, config->use_alt_i2c_addr);
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
   err = ctp_send_config(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
   err = verify_config_data_chunk(ctp);
-  if (err != CTP_ERROR_NONE) {
+  if (err != CTP_ERROR_NONE)
+  {
     return err;
   }
 
   ctp_clear_touch_event_list(&ctp->touch_list);
   ctp->is_initialized = true;
-  ctp->attention = false;
   return CTP_ERROR_NONE;
 }

@@ -80,26 +80,4 @@ typedef struct ctp_platform_interface_t {
   uint16_t pin_int;
 } ctp_platform_interface_t;
 
-/**
- * @brief Device context contains platform interface and cached device states.
- * Used to address specific device
- */
-typedef struct ctp_device_t {
-  const ctp_platform_interface_t *const plat; // Hardware callbacks
-  const uint_least8_t *const config_array;
-  const uint_least8_t config_array_length;
-  volatile bool *const isr_flag;  ///< pointer to users ISR flag
-  bool attention;                 ///< There has been a change a touch
-  bool is_initialized;            ///< @ref ctp_start has been called
-  uint_least8_t max_touch_points; ///< maximum number of touch points allowed
-  uint_least8_t i2c_addr;         ///< i2c write address, set on initialize
-  ctp_touch_list_t touch_list;    ///< All touch event data
-
-  /*
-   * Keep the receive buffer inside the object to avoid large stack usage
-   * in the polling path.
-   */
-  uint_least8_t rx_buf[CTP_MAX_TOUCH_POINTS];
-} ctp_device_t;
-
 #endif // CTP_PLATFORM_H
