@@ -3,7 +3,7 @@
 set -e
 
 BUILD_DIR="build"
-PROJECT_NAME="gt9271_driver"
+PROJECT_NAME="gt9271-c"
 
 echo "-------------------------------------------------------"
 echo " Performing Clean Verification Build: $PROJECT_NAME "
