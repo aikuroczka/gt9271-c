@@ -112,7 +112,7 @@ const ctp_config_t g_ctp_config = {
 void ctp_interrupt() { g_has_ctp_isr_triggered = true; }
 
 /* ==========================================================================
-C  MAIN APPLICATION
+   MAIN APPLICATION
    ========================================================================== */
 
 void setup() {
