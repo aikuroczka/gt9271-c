@@ -1,10 +1,15 @@
-/** @file ctp.c
- *  @brief GT9271 capacitive touch panel controller driver implementation.
+/**
+ * @file ctp.c
+ * @brief Core logic implementation for the GT9271 capacitive touch panel
+ * driver.
+ * @details This file implements the "Logic Layer" of the driver. It is
+ * responsible for:
+ * 1. Orchestrating the device lifecycle (Initialization, Sleep/Wake).
+ * 2. Managing the touch state machine (detecting START, MOVE, and RELEASE
+ * events).
+ * 3. Implementing an event-driven iterator to provide a clean API for the user.
  */
 
-#include "include/ctp_registers.h"
-#include "include/ctp_touch.h"
-#include "include/ctp_hal.h"
 #include <gt9271/ctp.h>
 #include <stddef.h>
 
