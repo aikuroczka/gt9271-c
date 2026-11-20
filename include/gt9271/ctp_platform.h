@@ -64,11 +64,11 @@ typedef bool (*ctp_i2c_write_t)(const uint16_t addr,
                                 const uint16_t data_but_len);
 
 /**
- * @brief I2C Read: Sends a header (reg address), then performs a repeated start
- * to read data.
+ * @brief I2C Read: Sends a header (reg address) as write function and then
+ * performes a read for the defined length
  *
- * The implementation must send the tx_reg_buf, issue a REPEATED START, and then
- * clock in rx_len bytes of data from the slave.
+ * The implementation must send the tx_reg_buf, issue a STOP, issue a new
+ * START READ and then clock in rx_len bytes of data from the slave.
  *
  * @param[in] addr The 7-bit I2C slave address.
  * @param[in] tx_reg_buf Buffer containing the register address(es) to read
