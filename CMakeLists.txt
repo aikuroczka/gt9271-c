@@ -16,6 +16,9 @@ endif()
 # We use STATIC because embedded projects usually link everything into one binary
 add_library(gt9271 STATIC 
     src/ctp.c
+    src/ctp_hal.c
+    src/ctp_touch.c
+    src/ctp_default_config.c
 )
 
 # 3. Include Directories
