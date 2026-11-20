@@ -3,5 +3,9 @@ name = "cz_conventional_commits"
 tag_format = "$version"
 version_scheme = "semver2"
 version = "0.1.0"
+version_files = [
+    "VERSION:^\\d+\\.\\d+\\.\\d+$",
+    "include/gt9271/ctp_version.h:#define CTP_VERSION"
+]
 update_changelog_on_bump = true
 major_version_zero = true
