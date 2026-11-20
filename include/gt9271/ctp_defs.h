@@ -2,7 +2,8 @@
  * @file ctp_defs.h
  * @brief Global constants and hardware limits for the GT9271 driver.
  * @details This file contains the fixed constraints of the GT9271 hardware,
- * panel-specific geometry, and software tuning parameters used for noise filtering.
+ * panel-specific geometry, and software tuning parameters used for noise
+ * filtering.
  */
 
 #ifndef CTP_DEFS_H
@@ -12,13 +13,16 @@
    HARDWARE CONSTANTS (Fixed by GT9271 Specification)
    ========================================================================== */
 
-/** @brief Required configuration length based on register range 0x8047 to 0x8100. */
+/** @brief Required configuration length based on register range 0x8047 to
+ * 0x8100. */
 #define CTP_CONFIG_REQUIRED_LEN (186U)
 
-/** @brief Maximum number of simultaneous touch points supported by the hardware. */
+/** @brief Maximum number of simultaneous touch points supported by the
+ * hardware. */
 #define CTP_MAX_TOUCH_POINTS (10U)
 
-/** @brief Size in bytes of a single touch point record in the status registers. */
+/** @brief Size in bytes of a single touch point record in the status registers.
+ */
 #define CTP_BYTES_PER_TOUCH (8U)
 
 /** @brief Total buffer size required to read all possible touch points. */
@@ -28,10 +32,12 @@
    PANEL PARAMETERS (Specific to the 800x480 LCD Panel)
    ========================================================================== */
 
-/** @brief Physical X resolution of the touch panel. Used for boundary validation. */
+/** @brief Physical X resolution of the touch panel. Used for boundary
+ * validation. */
 #define CTP_MAX_X (800U)
 
-/** @brief Physical Y resolution of the touch panel. Used for boundary validation. */
+/** @brief Physical Y resolution of the touch panel. Used for boundary
+ * validation. */
 #define CTP_MAX_Y (480U)
 
 /* ==========================================================================
@@ -57,4 +63,4 @@
  */
 #define CTP_TOUCH_MOVEMENT_THRESHOLD (5U)
 
-#endif // CTP_DEFS_H
+#endif  // CTP_DEFS_H

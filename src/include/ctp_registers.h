@@ -1,8 +1,8 @@
 /**
  * @file ctp_registers.h
  * @brief Register map for the Goodix GT9271 capacitive touch controller.
- * @details This file defines the memory addresses and bitmasks used to communicate
- * with the GT9271. All addresses are based on the Rev.00 datasheet.
+ * @details This file defines the memory addresses and bitmasks used to
+ * communicate with the GT9271. All addresses are based on the Rev.00 datasheet.
  */
 
 #ifndef CTP_REGISTERS_H
@@ -27,7 +27,8 @@
 
 /** @brief Start address of the configuration data block. */
 #define CTP_REG_CONFIG_DATA (0x8047U)
-/** @brief End address of the configuration data block (Configuration Fresh flag). */
+/** @brief End address of the configuration data block (Configuration Fresh
+ * flag). */
 #define CTP_REG_CONFIG_FRESH (0x8100U)
 
 /* ==========================================================================
@@ -59,7 +60,8 @@
 
 /**
  * @brief Status register containing touch and key flags.
- * @details This register must be cleared by writing CTP_STATUS_REG_CLEAR after reading.
+ * @details This register must be cleared by writing CTP_STATUS_REG_CLEAR after
+ * reading.
  */
 #define CTP_REG_STATUS (0x814EU)
 
@@ -70,7 +72,8 @@
 #define CTP_STATUS_LARGE_DETECT (0x40U)
 /** @brief Key Event Flag: 1 = A configured touch key was pressed. */
 #define CTP_STATUS_HAVE_KEY (0x10U)
-/** @brief Touch Count Mask: Extracts the number of active touch points (0-10). */
+/** @brief Touch Count Mask: Extracts the number of active touch points (0-10).
+ */
 #define CTP_STATUS_TOUCH_MASK (0x0FU)
 /** @brief Key Status Mask: Extracts the state of configured touch keys. */
 #define CTP_STATUS_KEY_MASK (0x70U)
@@ -93,7 +96,8 @@
 
 /**
  * The GT9271 stores each touch point as an 8-byte record.
- * Layout: [TrackID][X_Low][X_High][Y_Low][Y_High][Size_Low][Size_High][Reserved]
+ * Layout:
+ * [TrackID][X_Low][X_High][Y_Low][Y_High][Size_Low][Size_High][Reserved]
  */
 #define CTP_TOUCH_DATA_TRACK_ID_OFFSET (0U)
 #define CTP_TOUCH_DATA_X_LOW_OFFSET (1U)
@@ -104,4 +108,4 @@
 #define CTP_TOUCH_DATA_SIZE_HIGH_OFFSET (6U)
 #define CTP_TOUCH_DATA_RESERVED_OFFSET (7U)
 
-#endif // CTP_REGISTERS_H
+#endif  // CTP_REGISTERS_H

@@ -1,10 +1,10 @@
 /**
  * @file ctp_hal.h
  * @brief Internal Hardware Abstraction Layer (HAL) for GT9271.
- * @details This header defines the internal helper functions that bridge the gap between
- * the public API and the platform-specific callbacks. These functions handle the
- * specific I2C protocol requirements of the GT9271, such as register address
- * formatting and status flag management.
+ * @details This header defines the internal helper functions that bridge the
+ * gap between the public API and the platform-specific callbacks. These
+ * functions handle the specific I2C protocol requirements of the GT9271, such
+ * as register address formatting and status flag management.
  */
 
 #ifndef CTP_HAL_H
@@ -24,10 +24,8 @@
  * @param[in] len Number of bytes to read.
  * @return CTP_ERROR_NONE on success, otherwise error code
  */
-ctp_error_t i2c_read_reg(const ctp_device_t *const ctp,
-                         const uint16_t reg,
-                         uint_least8_t *const data,
-                         const uint16_t len);
+ctp_error_t i2c_read_reg(const ctp_device_t* const ctp, const uint16_t reg,
+                         uint_least8_t* const data, const uint16_t len);
 
 /**
  * @brief Writes a block of data to a specific device register.
@@ -40,30 +38,29 @@ ctp_error_t i2c_read_reg(const ctp_device_t *const ctp,
  * @param[in] len Length of the data buffer.
  * @return CTP_ERROR_NONE on success, otherwise error code
  */
-ctp_error_t i2c_write_reg(const ctp_device_t *const ctp,
-                          const uint16_t reg,
-                          const uint_least8_t *const data,
-                          const uint16_t len);
+ctp_error_t i2c_write_reg(const ctp_device_t* const ctp, const uint16_t reg,
+                          const uint_least8_t* const data, const uint16_t len);
 
 /**
  * @brief Checks if the ISR flag is currently set.
  * @return true if an interrupt event is pending; false otherwise.
  */
-bool has_isr_event(const ctp_device_t *const ctp);
+bool has_isr_event(const ctp_device_t* const ctp);
 
 /**
  * @brief Clears the user-provided ISR flag to acknowledge the interrupt.
  * @param ctp Pointer to device context.
  */
-void clear_isr_flag(ctp_device_t *const ctp);
+void clear_isr_flag(ctp_device_t* const ctp);
 
 /**
  * @brief High-level check for an ISR event including synchronization delay.
  * @details This function checks for an ISR event, clears it, and applies the
- * required hardware synchronization delay (50us) to ensure registers are updated.
+ * required hardware synchronization delay (50us) to ensure registers are
+ * updated.
  * @return true if a valid interrupt occurred; false otherwise.
  */
-bool has_isr_event_occurred(ctp_device_t *const ctp);
+bool has_isr_event_occurred(ctp_device_t* const ctp);
 
 /**
  * @brief Helper to read a 16-bit word from a register.
@@ -72,9 +69,8 @@ bool has_isr_event_occurred(ctp_device_t *const ctp);
  * @param[out] ret_word Pointer to store the resulting 16-bit value.
  * @return CTP_ERROR_NONE on success, otherwise error code
  */
-ctp_error_t get_two_byte_reg_data(const ctp_device_t *const ctp,
-                                  const uint16_t reg,
-                                  uint16_t *const ret_word);
+ctp_error_t get_two_byte_reg_data(const ctp_device_t* const ctp,
+                                  const uint16_t reg, uint16_t* const ret_word);
 
 /**
  * @brief Reads the device status register and clears the data flag.
@@ -87,16 +83,16 @@ ctp_error_t get_two_byte_reg_data(const ctp_device_t *const ctp,
  * @param[out] touch_points Number of active touch points reported by the chip.
  * @return CTP_ERROR_NONE on success,otherwise error code
  */
-ctp_error_t ctp_read_status(const ctp_device_t *const ctp,
-                            bool *const has_new_data,
-                            uint_least8_t *const touch_points);
+ctp_error_t ctp_read_status(const ctp_device_t* const ctp,
+                            bool* const has_new_data,
+                            uint_least8_t* const touch_points);
 
 /**
  * @brief Sets the physical state of the RESET pin.
  * @param[in] plat Pointer to platform interface.
  * @param[in] is_in_reset true to pull RESET low (active), false to release.
  */
-void set_reset_state(const ctp_platform_interface_t *const plat,
+void set_reset_state(const ctp_platform_interface_t* const plat,
                      const bool is_in_reset);
 
 /**
@@ -109,8 +105,7 @@ void set_reset_state(const ctp_platform_interface_t *const plat,
  * @param[in] use_alt_address true for 0x14, false for 0x5D.
  * @note should only be called once during initilization after pointer checks
  */
-void set_i2c_address(ctp_device_t *const ctp,
-                     const bool use_alt_address);
+void set_i2c_address(ctp_device_t* const ctp, const bool use_alt_address);
 
 /**
  * @brief Verifies that the configuration was correctly written to the device.
@@ -120,14 +115,14 @@ void set_i2c_address(ctp_device_t *const ctp,
  * @param[in] ctp Pointer to device context.
  * @return CTP_ERROR_NONE if data matches; otherwise error code
  */
-ctp_error_t verify_config_data_chunk(const ctp_device_t *const ctp);
+ctp_error_t verify_config_data_chunk(const ctp_device_t* const ctp);
 
 /**
  * @brief Uploads the configuration array to the device registers.
  * @param[in] ctp Pointer to device context.
  * @return CTP_ERROR_NONE on success, otherwise error code
  */
-ctp_error_t ctp_send_config(const ctp_device_t *const ctp);
+ctp_error_t ctp_send_config(const ctp_device_t* const ctp);
 
 /**
  * @brief Parses raw I2C bytes into a structured touch point.
@@ -137,19 +132,19 @@ ctp_error_t ctp_send_config(const ctp_device_t *const ctp);
  * @param[out] touch Pointer to the structure to be populated.
  * @param[in] data Pointer to the raw byte array read from the device.
  */
-void parse_data_into_touch(ctp_touch_t *const touch,
-                           const uint_least8_t *const data);
+void parse_data_into_touch(ctp_touch_t* const touch,
+                           const uint_least8_t* const data);
 
 /**
  * @brief Prepares the hardware for sleep mode by driving the INT pin low.
  * @param plat Pointer to platform interface.
  */
-void hal_prepare_for_sleep(const ctp_platform_interface_t *const plat);
+void hal_prepare_for_sleep(const ctp_platform_interface_t* const plat);
 
 /**
  * @brief Wakes the device from sleep mode by pulsing the INT pin high.
  * @param plat Pointer to platform interface.
  */
-void hal_wake_from_sleep(const ctp_platform_interface_t *const plat);
+void hal_wake_from_sleep(const ctp_platform_interface_t* const plat);
 
-#endif // CTP_HAL_H
+#endif  // CTP_HAL_H
