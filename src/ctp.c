@@ -151,14 +151,11 @@ bool ctp_get_next_event(ctp_device_t* const ctp, ctp_touch_t* const pt) {
     ctp_touch_t* const slot = &ctp->touch_list.touch[i];
 
     if (slot->event != CTP_EVENT_NONE) {
-      // 1. Copy the data to the user's buffer
       copy_touch(pt, slot);
       pt->event = slot->event;
 
-      // 2. Clear the event in the internal list so it isn't returned again
       slot->event = CTP_EVENT_NONE;
 
-      // 3. Update iterator for the next call
       ctp->event_iterator_idx = i + 1;
       return true;
     }
@@ -179,7 +176,8 @@ ctp_error_t ctp_check_for_change(ctp_device_t* const ctp,
     return CTP_ERROR_NULL_PTR;
   }
   *has_change_occurred = false;
-  ctp->event_iterator_idx = 0;
+  ctp->event_iterator_idx =
+      0;  // must clear iterator for next ctp_get_next_event call
 
   // clear all previous events
   for (uint16_t i = 0; i < CTP_MAX_TOUCH_POINTS; i++) {
