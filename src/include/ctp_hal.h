@@ -144,6 +144,8 @@ void hal_prepare_for_sleep(const ctp_platform_interface_t* const plat);
 /**
  * @brief Wakes the device from sleep mode by pulsing the INT pin high.
  * @param plat Pointer to platform interface.
+ * @note blocks operation for about 58 milliseconds. This is required as the
+ * ctp can not accept any actions until it has had sufficienct time to wake.
  */
 void hal_wake_from_sleep(const ctp_platform_interface_t* const plat);
 

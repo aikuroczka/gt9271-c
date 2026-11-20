@@ -35,6 +35,7 @@
 #define CTP_RESET_DELAY_AFTER_INT_US (1000U)
 #define CTP_HOLD_INT_DUR_US (10000U)
 #define CTP_SLEEP_WAKE_PULSE_US (5000U)
+#define CTP_WAKE_DELAY_BEFORE_USABLE_US (58000U)
 
 /**
  * @brief Assembles a 16-bit word from two bytes.
@@ -274,4 +275,7 @@ void hal_wake_from_sleep(const ctp_platform_interface_t* const plat) {
   plat->gpio_write(plat->pin_int, true);
   plat->delay_usec(CTP_SLEEP_WAKE_PULSE_US);
   plat->gpio_set_input(plat->pin_int);
+
+  // must wait at least 58ms before you can communicate with the device
+  plat->delay_usec(CTP_WAKE_DELAY_BEFORE_USABLE_US);
 }

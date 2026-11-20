@@ -122,6 +122,7 @@ ctp_error_t ctp_enter_sleep(const ctp_device_t* const ctp);
  * datasheet.
  * @param ctp Pointer to device handler.
  * @return CTP_ERROR_NONE on success, or error code.
+ * @warning this function is blocking for at least 58 milliseconds.
  */
 ctp_error_t ctp_exit_sleep(const ctp_device_t* const ctp);
 
