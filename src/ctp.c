@@ -8,21 +8,15 @@
 #include <gt9271/ctp.h>
 #include <stddef.h>
 
-/** @brief Mask to extract the least significant byte from a 16-bit word. */
-#define CTP_LSB_MASK 0xFFU
-
-/** @brief Bit shift required to align the MSB of a 16-bit word. */
-#define CTP_MSB_SHIFT (8U)
-
-/** @brief number of bytes for register, must be sent as header for all i2c
- * commands */
-#define CTP_REGISTER_BYTE_COUNT (2U)
-
 static inline ctp_error_t validate_context(const ctp_device_t *const ctp)
 {
   if (ctp == NULL)
   {
     return CTP_ERROR_HANDLER_IS_NULL;
+  }
+  if (ctp->config == NULL)
+  {
+    return CTP_ERROR_CONFIG_IS_NULL;
   }
   if (ctp->config->plat == NULL)
   {
@@ -140,6 +134,46 @@ ctp_get_set_number_of_touch_points(const ctp_device_t *const ctp)
   return ctp->max_touch_points;
 }
 
+uint_least8_t ctp_get_touch_count(const ctp_device_t *const ctp)
+{
+  if (ctp == NULL)
+  {
+    return 0;
+  }
+
+  return ctp->touch_list.count;
+}
+
+bool ctp_get_next_event(ctp_device_t *const ctp, ctp_touch_t *const pt)
+{
+  if (ctp == NULL || pt == NULL)
+    return false;
+
+  // Loop through the touch list starting from the last saved index
+  for (uint_least8_t i = ctp->event_iterator_idx; i < CTP_MAX_TOUCH_POINTS; i++)
+  {
+    ctp_touch_t *const slot = &ctp->touch_list.touch[i];
+
+    if (slot->event != CTP_EVENT_NONE)
+    {
+      // 1. Copy the data to the user's buffer
+      copy_touch(pt, slot);
+      pt->event = slot->event;
+
+      // 2. Clear the event in the internal list so it isn't returned again
+      slot->event = CTP_EVENT_NONE;
+
+      // 3. Update iterator for the next call
+      ctp->event_iterator_idx = i + 1;
+      return true;
+    }
+  }
+
+  // Reset iterator for the next polling cycle
+  ctp->event_iterator_idx = 0;
+  return false;
+}
+
 ctp_error_t ctp_check_for_change(ctp_device_t *const ctp,
                                  bool *const has_change_occurred)
 {
@@ -153,6 +187,7 @@ ctp_error_t ctp_check_for_change(ctp_device_t *const ctp,
     return CTP_ERROR_NULL_PTR;
   }
   *has_change_occurred = false;
+  ctp->event_iterator_idx = 0;
 
   // clear all previous events
   for (uint16_t i = 0; i < CTP_MAX_TOUCH_POINTS; i++)
@@ -247,74 +282,6 @@ ctp_error_t ctp_check_for_change(ctp_device_t *const ctp,
   return CTP_ERROR_NONE;
 }
 
-uint16_t ctp_get_x(const ctp_device_t *const ctp, uint_least8_t idx)
-{
-  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS))
-  {
-    return 0;
-  }
-  return ctp->touch_list.touch[idx].x;
-}
-
-uint16_t ctp_get_y(const ctp_device_t *const ctp, uint_least8_t idx)
-{
-  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS))
-  {
-    return 0;
-  }
-  return ctp->touch_list.touch[idx].y;
-}
-
-ctp_event_t ctp_get_event(const ctp_device_t *const ctp,
-                          const uint_least8_t idx)
-{
-  if ((ctp == NULL) || (idx >= CTP_MAX_TOUCH_POINTS))
-  {
-    return CTP_EVENT_NONE;
-  }
-  return ctp->touch_list.touch[idx].event;
-}
-
-void ctp_clear_touch_event(ctp_touch_t *const touch)
-{
-  if (touch == NULL)
-  {
-    return;
-  }
-
-  touch->event = CTP_EVENT_NONE;
-}
-
-bool ctp_is_touched(const ctp_device_t *const ctp)
-{
-  if (ctp == NULL)
-  {
-    return false;
-  }
-
-  return ctp->touch_list.count > 0;
-}
-
-uint_least8_t ctp_get_touch_count(const ctp_device_t *const ctp)
-{
-  if (ctp == NULL)
-  {
-    return 0;
-  }
-
-  return ctp->touch_list.count;
-}
-
-uint_least8_t ctp_get_key_status(const ctp_device_t *const ctp)
-{
-  if (ctp == NULL)
-  {
-    return 0;
-  }
-
-  return ctp->touch_list.key_status;
-}
-
 ctp_error_t ctp_enter_sleep(const ctp_device_t *const ctp)
 {
   ctp_error_t err = validate_context(ctp);
@@ -355,7 +322,7 @@ ctp_error_t ctp_initialize(ctp_device_t *const ctp, const ctp_config_t *const co
   {
     return CTP_ERROR_CONFIG_INVALID;
   }
-  if (ctp->config->plat == NULL)
+  if (config->plat == NULL)
   {
     return CTP_ERROR_PLAT_IS_NULL;
   }
