@@ -6,7 +6,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef enum ctp_error_t {
+typedef enum ctp_error_t
+{
   CTP_ERROR_NONE = 0,
   CTP_ERROR_HANDLER_IS_NULL,
   CTP_ERROR_PLAT_IS_NULL,
@@ -16,7 +17,11 @@ typedef enum ctp_error_t {
   CTP_ERROR_ATTEMPT_READ_WRITE_ONLY_REG,
   CTP_ERROR_CONFIG_NOT_SENT,
   CTP_ERROR_CONFIG_INVALID,
+  CTP_ERROR_CONFIG_RAW_CHECK_FAIL,
+  CTP_ERROR_DEFS_INVALID,
   CTP_ERROR_COMM_TEST_FAIL,
+  CTP_ERROR_EXCEED_MAX_TOUCH_COUNT,
+  CTP_ERROR_TOUCH_COUNT_ZERO,
   CTP_ERROR_INDEX_OOB_ATTEMPT, ///< user provided function input that would have
                                ///< exceded the bounds of an array
   CTP_ERROR_I2C,
@@ -25,14 +30,16 @@ typedef enum ctp_error_t {
                            ///< function exit
 } ctp_error_t;
 
-typedef enum ctp_event_t {
+typedef enum ctp_event_t
+{
   CTP_EVENT_NONE = 0,
   CTP_EVENT_START,
   CTP_EVENT_MOVE,
   CTP_EVENT_RELEASE
 } ctp_event_t;
 
-typedef struct ctp_touch_t {
+typedef struct ctp_touch_t
+{
   uint16_t track_id;
   uint16_t x;
   uint16_t y;
@@ -41,7 +48,8 @@ typedef struct ctp_touch_t {
   ctp_event_t event;
 } ctp_touch_t;
 
-typedef struct ctp_touch_list_t {
+typedef struct ctp_touch_list_t
+{
   ctp_touch_t touch[CTP_MAX_TOUCH_POINTS];
   uint_least8_t count;
   uint_least8_t key_status;
