@@ -80,11 +80,11 @@ bool are_touches_equal(const ctp_touch_t* const a, const ctp_touch_t* const b) {
     return false;
   }
 
-  const int16_t diff_x = (int16_t)a->x - (int16_t)b->x;
-  const int16_t diff_y = (int16_t)a->y - (int16_t)b->y;
+  const uint16_t diff_x = (uint16_t)(abs((int16_t)a->x - (int16_t)b->x));
+  const uint16_t diff_y = (uint16_t)(abs((int16_t)a->y - (int16_t)b->y));
 
-  if ((abs(diff_x) > CTP_TOUCH_MOVEMENT_THRESHOLD) ||
-      (abs(diff_y) > CTP_TOUCH_MOVEMENT_THRESHOLD)) {
+  if ((diff_x > CTP_TOUCH_MOVEMENT_THRESHOLD) ||
+      (diff_y > CTP_TOUCH_MOVEMENT_THRESHOLD)) {
     return false;
   }
   if (a->size != b->size) {
