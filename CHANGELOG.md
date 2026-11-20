@@ -1,3 +1,14 @@
+## 0.1.1 (2026-11-20)
+
+### Feat
+
+- **api**: addition of version file giving software access to build version
+
+### Fix
+
+- **core**: added a delay after waking the device which is required before communication can be attempted
+- **core**: coorected comparision between signed and unsigned int in touch logic
+
 ## 0.1.0 (2026-11-20)
 
 ### Feat
